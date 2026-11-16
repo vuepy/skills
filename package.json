@@ -1,0 +1,11 @@
+{
+  "name": "vuepy-skills",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@10.12.4",
+  "license": "CC BY-NC-SA 4.0",
+  "scripts": {
+    "prepare:docs": "cd ./vuepy_docs && pnpm install && pnpm run build:md",
+    "build": "node build.mjs"
+  }
+}

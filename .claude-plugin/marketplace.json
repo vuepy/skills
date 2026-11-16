@@ -1,0 +1,54 @@
+{
+  "name": "vuepy-skills",
+  "owner": {
+    "name": "Vuepy",
+    "url": "https://github.com/vuepy"
+  },
+  "plugins": [
+    {
+      "name": "vuepy",
+      "source": "./",
+      "description": "Build Vuepy apps with Python single-file components. Includes the guide and API references.",
+      "keywords": ["vuepy", "vue", "jupyter", "python"],
+      "skills": [
+        "./skills/vuepy"
+      ]
+    },
+    {
+      "name": "ipywui",
+      "source": "./",
+      "description": "Use IPywUI widgets such as Button, Input, VBox, and HBox in Vuepy single-file components.",
+      "keywords": ["vuepy", "ipywui", "ipywidgets", "jupyter"],
+      "skills": [
+        "./skills/ipywui"
+      ]
+    },
+    {
+      "name": "vleaflet",
+      "source": "./",
+      "description": "Build reactive Jupyter maps with vleaflet components such as Map, layers, and controls.",
+      "keywords": ["vuepy", "vleaflet", "ipyleaflet", "map"],
+      "skills": [
+        "./skills/vleaflet"
+      ]
+    },
+    {
+      "name": "panel_vuepy",
+      "source": "./",
+      "description": "Build Panel-backed Vuepy apps with panel_vuepy components.",
+      "keywords": ["vuepy", "panel", "panel_vuepy"],
+      "skills": [
+        "./skills/panel_vuepy"
+      ]
+    },
+    {
+      "name": "textual_vuepy",
+      "source": "./",
+      "description": "Build terminal TUI apps with Textual-vuepy widgets.",
+      "keywords": ["vuepy", "textual", "tui"],
+      "skills": [
+        "./skills/textual_vuepy"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,284 @@
+# 插槽 Slots {#slots}
+
+> 此章节假设你已经看过了[组件基础](/guide/essentials/component-basics)。若你还不了解组件是什么，请先阅读该章节。
+
+## 插槽内容与出口 {#slot-content-and-outlet}
+
+在之前的章节中，我们已经了解到组件能够接收任意类型的 Python 值作为 props，但组件要如何接收模板内容呢？在某些场景中，我们可能想要为子组件传递一些模板片段，让子组件在它们的组件中渲染这些片段。
+
+举例来说，这里有一个 `<FancyButton>` 组件，可以像这样使用：
+
+```vue-html{2}
+<FancyButton>
+  <span>Click me!<span> <!-- 插槽内容 -->
+</FancyButton>
+```
+
+而 `<FancyButton>` 的模板是这样的：
+
+```vue-html{2}
+<button class="fancy-btn">
+  <slot></slot> <!-- 插槽出口 -->
+</button>
+```
+
+`<slot>` 元素是一个**插槽出口** (slot outlet)，标示了父元素提供的**插槽内容** (slot content) 将在哪里被渲染。
+
+![插槽图示](./images/slots.png)
+
+<!-- https://www.figma.com/file/LjKTYVL97Ck6TEmBbstavX/slot -->
+
+最终渲染出的 DOM 是这样：
+
+```html
+<button class="fancy-btn"><span>Click me!</span></button>
+```
+
+<div class="composition-api">
+
+<!-- todo 暂不支持
+[在演练场中尝试一下](https://play.vuejs.org/#eNpdUdlqAyEU/ZVbQ0kLMdNsXabTQFvoV8yLcRkkjopLSQj596oTwqRvnuM9y9UT+rR2/hs5qlHjqZM2gOch2m2rZW+NC/BDND1+xRCMBuFMD9N5NeKyeNrqphrUSZdA4L1VJPCEAJrRdCEAvpWke+g5NHcYg1cmADU6cB0A4zzThmYckqimupqiGfpXILe/zdwNhaki3n+0SOR5vAu6ReU++efUajtqYGJQ/FIg5w8Wt9FlOx+OKh/nV1c4ZVNqlHE1TIQQ7xnvCN13zkTNalBSc+Jw5wiTac2H1WLDeDeDyXrJVm9LWG7uE3hev3AhHge1cYwnO200L4QljEnd1bCxB1g82UNhe+I6qQs5kuGcE30NrxeaRudzOWtkemeXuHP5tLIKOv8BN+mw3w==)
+-->
+
+</div>
+
+通过使用插槽，`<FancyButton>` 仅负责渲染外层的 `<button>` (以及相应的样式)，而其内部的内容由父组件提供。
+
+理解插槽的另一种方式是和下面的 Python 函数作类比，其概念是类似的：
+
+```py
+# 父元素传入插槽内容
+FancyButton('Click me!')
+
+# FancyButton 在自己的模板中渲染插槽内容
+def FancyButton(slotContent):
+  return f'''
+      <button class="fancy-btn">
+        {slotContent}
+      </button>'''
+```
+
+插槽内容可以是任意合法的模板内容，不局限于文本。例如我们可以传入多个元素，甚至是组件：
+
+```vue-html
+<FancyButton>
+  <span style="color:red">Click me!</span>
+  <AwesomeIcon name="plus"></AwesomeIcon>
+</FancyButton>
+```
+
+<div class="composition-api">
+
+<!-- todo 暂不支持
+[在演练场中尝试一下](https://play.vuejs.org/#eNp1UmtOwkAQvspQYtCEgrx81EqCJibeoX+W7bRZaHc3+1AI4QyewH8ewvN4Aa/gbgtNIfFf5+vMfI/ZXbCQcvBmMYiCWFPFpAGNxsp5wlkphTLwQjjdPlljBIdMiRJ6g2EL88O9pnnxjlqU+EpbzS3s0BwPaypH4gqDpSyIQVcBxK3VFQDwXDC6hhJdlZi4zf3fRKwl4aDNtsDHJKCiECqiW8KTYH5c1gEnwnUdJ9rCh/XeM6Z42AgN+sFZAj6+Ux/LOjFaEK2diMz3h0vjNfj/zokuhPFU3lTdfcpShVOZcJ+DZgHs/HxtCrpZlj34eknoOlfC8jSCgnEkKswVSRlyczkZzVLM+9CdjtPJ/RjGswtX3ExvMcuu6mmhUnTruOBYAZKkKeN5BDO5gdG13FRoSVTOeAW2xkLPY3UEdweYWqW9OCkYN6gctq9uXllx2Z09CJ9dJwzBascI7nBYihWDldUGMqEgdTVIq6TQqCEMfUpNSD+fX7/fH+3b7P8AdGP6wA==)
+-->
+
+</div>
+
+通过使用插槽，`<FancyButton>` 组件更加灵活和具有可复用性。现在组件可以用在不同的地方渲染各异的内容，但同时还保证都具有相同的样式。
+
+Vue.py 组件的插槽机制是受 `Vue.js` 和 [原生 Web Component `<slot>` 元素](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/slot)的启发而诞生，同时还做了一些功能拓展，这些拓展的功能我们后面会学习到。
+
+## 渲染作用域 {#render-scope}
+
+插槽内容可以访问到父组件的数据作用域，因为插槽内容本身是在父组件模板中定义的。举例来说：
+
+```vue-html
+<span>{{ message }}</span>
+<FancyButton>{{ message }}</FancyButton>
+```
+
+这里的两个 <span v-pre>`{{ message }}`</span> 插值表达式渲染的内容都是一样的。
+
+插槽内容**无法访问**子组件的数据。Vue.py 模板中的表达式只能访问其定义时所处的作用域，这和 Python 的变量作用域规则是一致的。换言之：
+
+> 父组件模板中的表达式只能访问父组件的作用域；子组件模板中的表达式只能访问子组件的作用域。
+
+## 默认内容 {#fallback-content}
+
+在外部没有提供任何内容的情况下，可以为插槽指定默认内容。比如有这样一个 `<SubmitButton>` 组件：
+
+```vue-html
+<button type="submit">
+  <slot></slot>
+</button>
+```
+
+如果我们想在父组件没有提供任何插槽内容时在 `<button>` 内渲染“Submit”，只需要将“Submit”写在 `<slot>` 标签之间来作为默认内容：
+
+```vue-html{3}
+<button type="submit">
+  <slot>
+    Submit <!-- 默认内容 -->
+  </slot>
+</button>
+```
+
+现在，当我们在父组件中使用 `<SubmitButton>` 且没有提供任何插槽内容时：
+
+```vue-html
+<SubmitButton></SubmitButton>
+```
+
+“Submit”将会被作为默认内容渲染：
+
+```html
+<button type="submit">Submit</button>
+```
+
+但如果我们提供了插槽内容：
+
+```vue-html
+<SubmitButton>Save</SubmitButton>
+```
+
+那么被显式提供的内容会取代默认内容：
+
+```html
+<button type="submit">Save</button>
+```
+
+<div class="composition-api">
+
+<!-- todo 暂不支持
+[在演练场中尝试一下](https://play.vuejs.org/#eNp1kMsKwjAQRX9lzMaNbfcSC/oL3WbT1ikU8yKZFEX8d5MGgi2YVeZxZ86dN7taWy8B2ZlxP7rZEnikYFuhZ2WNI+jCoGa6BSKjYXJGwbFufpNJfhSaN1kflTEgVFb2hDEC4IeqguARpl7KoR8fQPgkqKpc3Wxo1lxRWWeW+Y4wBk9x9V9d2/UL8g1XbOJN4WAntodOnrecQ2agl8WLYH7tFyw5olj10iR3EJ+gPCxDFluj0YS6EAqKR8mi9M3Td1ifLxWShcU=)
+-->
+
+</div>
+
+## 具名插槽 {#named-slots}
+
+有时在一个组件中包含多个插槽出口是很有用的。举例来说，在一个 `<BaseLayout>` 组件中，有如下模板：
+
+```vue-html
+<div class="container">
+  <header>
+    <!-- 标题内容放这里 -->
+  </header>
+  <main>
+    <!-- 主要内容放这里 -->
+  </main>
+  <footer>
+    <!-- 底部内容放这里 -->
+  </footer>
+</div>
+```
+
+对于这种场景，`<slot>` 元素可以有一个特殊的 attribute `name`，用来给各个插槽分配唯一的 ID，以确定每一处要渲染的内容：
+
+```vue-html
+<div class="container">
+  <header>
+    <slot name="header"></slot>
+  </header>
+  <main>
+    <slot></slot>
+  </main>
+  <footer>
+    <slot name="footer"></slot>
+  </footer>
+</div>
+```
+
+这类带 `name` 的插槽被称为具名插槽 (named slots)。没有提供 `name` 的 `<slot>` 出口会隐式地命名为“default”。
+
+在父组件中使用 `<BaseLayout>` 时，我们需要一种方式将多个插槽内容传入到各自目标插槽的出口。此时就需要用到**具名插槽**了：
+
+要为具名插槽传入内容，我们需要使用一个含 `v-slot` 指令的 `<template>` 元素，并将目标插槽的名字传给该指令：
+
+```vue-html
+<BaseLayout>
+  <template v-slot:header>
+    <!-- header 插槽的内容放这里 -->
+  </template>
+</BaseLayout>
+```
+
+`v-slot` 有对应的简写 `#`，因此 `<template v-slot:header>` 可以简写为 `<template #header>`。其意思就是“将这部分模板片段传入子组件的 header 插槽中”。
+
+![具名插槽图示](./images/named-slots.png)
+
+<!-- https://www.figma.com/file/2BhP8gVZevttBu9oUmUUyz/named-slot -->
+
+下面我们给出完整的、向 `<BaseLayout>` 传递插槽内容的代码，指令均使用的是缩写形式：
+
+```vue-html
+<BaseLayout>
+  <template #header>
+    <h1>Here might be a page title</h1>
+  </template>
+
+  <template #default>
+    <p>A paragraph for the main content.</p>
+    <p>And another one.</p>
+  </template>
+
+  <template #footer>
+    <p>Here's some contact info</p>
+  </template>
+</BaseLayout>
+```
+
+当一个组件同时接收默认插槽和具名插槽时，所有位于顶级的非 `<template>` 节点都被隐式地视为默认插槽的内容。所以上面也可以写成：
+
+<!-- todo add test case -->
+
+```vue-html
+<BaseLayout>
+  <template #header>
+    <h1>Here might be a page title</h1>
+  </template>
+
+  <!-- 隐式的默认插槽 -->
+  <p>A paragraph for the main content.</p>
+  <p>And another one.</p>
+
+  <template #footer>
+    <p>Here's some contact info</p>
+  </template>
+</BaseLayout>
+```
+
+现在 `<template>` 元素中的所有内容都将被传递到相应的插槽。最终渲染出的 HTML 如下：
+
+```html
+<div class="container">
+  <header>
+    <h1>Here might be a page title</h1>
+  </header>
+  <main>
+    <p>A paragraph for the main content.</p>
+    <p>And another one.</p>
+  </main>
+  <footer>
+    <p>Here's some contact info</p>
+  </footer>
+</div>
+```
+
+<div class="composition-api">
+
+<!-- todo 暂不支持
+[在演练场中尝试一下](https://play.vuejs.org/#eNp9UsFuwjAM/RWrHLgMOi5o6jIkdtphn9BLSF0aKU2ixEVjiH+fm8JoQdvRfu/5xS8+ZVvvl4cOsyITUQXtCSJS5zel1a13geBdRvyUR9cR1MG1MF/mt1YvnZdW5IOWVVwQtt5IQq4AxI2cau5ccZg1KCsMlz4jzWrzgQGh1fuGYIcgwcs9AmkyKHKGLyPykcfD1Apr2ZmrHUN+s+U5Qe6D9A3ULgA1bCK1BeUsoaWlyPuVb3xbgbSOaQGcxRH8v3XtHI0X8mmfeYToWkxmUhFoW7s/JvblJLERmj1l0+T7T5tqK30AZWSMb2WW3LTFUGZXp/u8o3EEVrbI9AFjLn8mt38fN9GIPrSp/p4/Yoj7OMZ+A/boN9KInPeZZpAOLNLRDAsPZDgN4p0L/NQFOV/Ayn9x6EZXMFNKvQ4E5YwLBczW6/WlU3NIi6i/sYDn5Qu2qX1OF51MsvMPkrIEHg==)
+-->
+
+</div>
+
+使用 Python 函数来类比可能更有助于你来理解具名插槽：
+
+```py
+# 传入不同的内容给不同名字的插槽
+BaseLayout({
+  'header': '...',
+  'default': '...',
+  'footer': '...',
+})
+
+# <BaseLayout> 渲染插槽内容到对应位置
+def BaseLayout(slots):
+  return f'''<div class="container">
+      <header>{slots['header']}</header>
+      <main>{slots['default']}</main>
+      <footer>{slots['footer']}</footer>
+    </div>'''
+```

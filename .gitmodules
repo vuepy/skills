@@ -1,0 +1,3 @@
+[submodule "vuepy_docs"]
+	path = vuepy_docs
+	url = https://github.com/vuepy/docs.git

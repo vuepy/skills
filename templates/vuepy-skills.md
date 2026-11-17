@@ -1,6 +1,6 @@
 ---
 name: vuepy
-description: Build Vuepy apps with Python single-file components in Jupyter. Use when creating or modifying .vue files, calling vuepy APIs such as ref, reactive, computed, watch, or create_app, or when the user mentions vuepy or Vue.py.
+description: Build Vuepy apps with Python single-file components in Jupyter or as terminal TUI apps (textual_vuepy). Use when creating or modifying .vue files, calling vuepy APIs such as ref, reactive, computed, watch, or create_app, or when the user mentions vuepy, Vue.py, textual_vuepy, or a TUI app.
 license: CC BY-NC-SA 4.0
 ---
 

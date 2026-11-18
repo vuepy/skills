@@ -20,7 +20,7 @@
       "description": "Use IPywUI widgets such as Button, Input, VBox, and HBox in Vuepy single-file components.",
       "keywords": ["vuepy", "ipywui", "ipywidgets", "jupyter"],
       "skills": [
-        "./skills/ipywui"
+        "./skills/vuepy-ipywui"
       ]
     },
     {
@@ -29,7 +29,7 @@
       "description": "Build reactive Jupyter maps with vleaflet components such as Map, layers, and controls.",
       "keywords": ["vuepy", "vleaflet", "ipyleaflet", "map"],
       "skills": [
-        "./skills/vleaflet"
+        "./skills/vuepy-vleaflet"
       ]
     },
     {

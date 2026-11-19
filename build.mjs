@@ -19,13 +19,13 @@ const PACKAGES = [
     format: 'list',
   },
   {
-    name: 'ipywui',
+    name: 'vuepy-ipywui',
     template: 'ipywui-skills.md',
     sections: ['/ipywui/'],
     format: 'table',
   },
   {
-    name: 'vleaflet',
+    name: 'vuepy-vleaflet',
     template: 'vleaflet-skills.md',
     sections: ['/vleaflet/'],
     format: 'table',
